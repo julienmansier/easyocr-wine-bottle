@@ -1,0 +1,25 @@
+# EasyOCR Wine Bottle Text Extraction Dependencies
+
+# Core OCR library
+easyocr>=1.7.0
+
+# Image processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Deep learning backend (required by EasyOCR)
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Data handling
+numpy>=1.24.0
+
+# API dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+python-multipart>=0.0.6
+
+# Development tools (optional)
+# jupyter>=1.0.0
+# ipython>=8.0.0

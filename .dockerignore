@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+docs/
+
+# Test results
+ocr_results/
+batch_results/
+*_ocr.jpg
+*_ocr.png
+
+# Sample images (don't need in container)
+sample_images/
+
+# Development files
+examples/
+.env
+.env.local
+*.log
