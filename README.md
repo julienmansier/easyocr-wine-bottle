@@ -21,9 +21,9 @@ EasyOCR-based text extraction service for wine bottle images. This project provi
    ```
 
 2. **Access the API:**
-   - API docs: http://localhost:8000/docs
-   - Health check: http://localhost:8000/health
-   - API info: http://localhost:8000/api/v1/info
+   - API docs: http://localhost:8001/docs
+   - Health check: http://localhost:8001/health
+   - API info: http://localhost:8001/api/v1/info
 
 ### Local Installation
 
@@ -40,7 +40,7 @@ EasyOCR-based text extraction service for wine bottle images. This project provi
 
 3. **Run the API:**
    ```bash
-   uvicorn src.api:app --reload --host 0.0.0.0 --port 8000
+   uvicorn src.api:app --reload --host 0.0.0.0 --port 8001
    ```
 
 ## API Usage
@@ -51,7 +51,7 @@ EasyOCR-based text extraction service for wine bottle images. This project provi
 
 **Request:**
 ```bash
-curl -X POST "http://localhost:8000/api/v1/extract" \
+curl -X POST "http://localhost:8001/api/v1/extract" \
      -H "Content-Type: application/json" \
      -d '{
            "image": "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
@@ -72,7 +72,7 @@ with open("wine_bottle.jpg", "rb") as f:
 
 # Make request
 response = requests.post(
-    "http://localhost:8000/api/v1/extract",
+    "http://localhost:8001/api/v1/extract",
     json={
         "image": f"data:image/jpeg;base64,{image_data}",
         "confidence": 0.25,
@@ -227,7 +227,7 @@ docker build -t wine-bottle-ocr:latest .
 
 ### Run the container
 ```bash
-docker run -p 8000:8000 wine-bottle-ocr:latest
+docker run -p 8001:8001 wine-bottle-ocr:latest
 ```
 
 ### With docker-compose
@@ -262,12 +262,12 @@ python src/test_api.py
 
 ### Run with auto-reload
 ```bash
-uvicorn src.api:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.api:app --reload --host 0.0.0.0 --port 8001
 ```
 
 ### View API documentation
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: http://localhost:8001/docs
+- ReDoc: http://localhost:8001/redoc
 
 ## Performance Notes
 

@@ -9,10 +9,10 @@ Endpoints:
     GET /api/v1/info - Get API and model information
 
 Usage:
-    uvicorn src.api:app --host 0.0.0.0 --port 8000
+    uvicorn src.api:app --host 0.0.0.0 --port 8001
 
     Or with reload for development:
-    uvicorn src.api:app --reload --host 0.0.0.0 --port 8000
+    uvicorn src.api:app --reload --host 0.0.0.0 --port 8001
 """
 
 import base64
@@ -246,7 +246,7 @@ async def extract_text(request: OCRRequest):
 
     Example:
         ```bash
-        curl -X POST "http://localhost:8000/api/v1/extract" \\
+        curl -X POST "http://localhost:8001/api/v1/extract" \\
              -H "Content-Type: application/json" \\
              -d '{
                    "image": "data:image/jpeg;base64,/9j/4AAQ...",
@@ -288,8 +288,8 @@ async def extract_text(request: OCRRequest):
             TextDetection(
                 text=det['text'],
                 confidence=det['confidence'],
-                bbox=det['bbox'],
-                position=list(det['position'])
+                bbox=[[int(x), int(y)] for x, y in det['bbox']],
+                position=[int(x) for x in det['position']]
             )
             for det in detections
         ]
@@ -346,4 +346,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

@@ -16,7 +16,7 @@ def test_health():
     print("Testing /health endpoint")
     print("="*60)
 
-    response = requests.get("http://localhost:8000/health")
+    response = requests.get("http://localhost:8001/health")
     print(f"Status Code: {response.status_code}")
     print(f"Response: {response.json()}")
 
@@ -31,7 +31,7 @@ def test_info():
     print("Testing /api/v1/info endpoint")
     print("="*60)
 
-    response = requests.get("http://localhost:8000/api/v1/info")
+    response = requests.get("http://localhost:8001/api/v1/info")
     print(f"Status Code: {response.status_code}")
 
     data = response.json()
@@ -64,7 +64,7 @@ def test_extract_text(image_path: str = "sample_images/wine_bottle.jpeg"):
     # Make request
     print("Sending OCR request...")
     response = requests.post(
-        "http://localhost:8000/api/v1/extract",
+        "http://localhost:8001/api/v1/extract",
         json={
             "image": f"data:image/jpeg;base64,{image_data}",
             "confidence": 0.25,
@@ -103,7 +103,7 @@ def test_extract_text_invalid():
 
     # Send invalid base64
     response = requests.post(
-        "http://localhost:8000/api/v1/extract",
+        "http://localhost:8001/api/v1/extract",
         json={
             "image": "invalid_base64_data",
             "confidence": 0.5,
@@ -122,7 +122,7 @@ def main():
     print("\n" + "="*60)
     print("Wine Bottle OCR API Tests")
     print("="*60)
-    print("\nMake sure the API is running on http://localhost:8000")
+    print("\nMake sure the API is running on http://localhost:8001")
     print("Start with: uvicorn src.api:app --reload")
 
     try:
@@ -138,7 +138,7 @@ def main():
 
     except requests.exceptions.ConnectionError:
         print("\n✗ Error: Could not connect to API")
-        print("Make sure the API is running on http://localhost:8000")
+        print("Make sure the API is running on http://localhost:8001")
         sys.exit(1)
     except AssertionError as e:
         print(f"\n✗ Test failed: {e}")
