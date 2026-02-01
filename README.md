@@ -6,10 +6,12 @@ EasyOCR-based text extraction service for wine bottle images. This project provi
 
 - **Multi-language OCR**: Supports English, French, Italian, Spanish, German, Portuguese, and more
 - **REST API**: FastAPI-based service with automatic documentation
+- **Batch OCR Endpoint**: Process multiple regions (YOLO detections) in a single API call
+- **YOLO Integration**: Complete pipeline for detecting bottles and extracting text
+- **Model Caching**: OCR model stays loaded in memory for fast processing
 - **Docker Support**: Fully containerized with Docker and docker-compose
 - **Confidence Filtering**: Configurable confidence thresholds for text detection
 - **Visual Annotations**: Optional annotated images with bounding boxes
-- **Batch Processing**: Process multiple images efficiently
 
 ## Quick Start
 
@@ -194,11 +196,24 @@ GET /api/v1/info
 ```
 Returns API capabilities, supported languages, and available endpoints.
 
-### Extract Text
+### Extract Text (Single Image)
 ```bash
 POST /api/v1/extract
 ```
-Extract text from base64-encoded image.
+Extract text from a base64-encoded image.
+
+### Batch OCR (Multiple Regions)
+```bash
+POST /api/v1/batch
+```
+Extract text from multiple regions in a single image (YOLO integration).
+
+**Example:**
+```bash
+python src/test/test_batch_api.py --image photo.jpg --boundaries boundaries.json
+```
+
+See [src/test/BATCH_OCR_USAGE.md](src/test/BATCH_OCR_USAGE.md) for complete documentation.
 
 ## Configuration
 
@@ -238,13 +253,17 @@ docker-compose up --build
 ## Project Structure
 
 ```
-easyocr-wine-bottle/
+easyocr/
 ├── src/
-│   ├── api.py                 # FastAPI application
-│   └── utils/
-│       ├── __init__.py
-│       └── ocr_reader.py      # EasyOCR wrapper
-├── sample_images/             # Test images
+│   ├── api.py                 # FastAPI application with batch endpoint
+│   ├── utils/
+│   │   └── ocr_reader.py      # EasyOCR wrapper
+│   └── test/
+│       ├── yolo_ocr_pipeline.py      # End-to-end YOLO + OCR pipeline
+│       ├── run_yolo_detection.py     # YOLO detection script
+│       ├── test_batch_api.py         # Batch API testing tool
+│       ├── test_batch_performance.py # Performance benchmarks
+│       └── BATCH_OCR_USAGE.md        # Complete batch OCR guide
 ├── examples/                  # Usage examples
 ├── models/                    # Downloaded EasyOCR models (auto-created)
 ├── Dockerfile                 # Container definition
@@ -276,17 +295,26 @@ uvicorn src.api:app --reload --host 0.0.0.0 --port 8001
 - **Image Size**: Larger images take longer to process; consider resizing very large images
 - **Language Selection**: Using fewer languages improves speed and accuracy
 
-## Comparison with YOLO Wine Bottle Detector
+## YOLO + OCR Integration
 
-This project complements the [yolo-wine-bottle-detector](https://github.com/julienmansier/yolo-wine-bottle-detector) by focusing on text extraction rather than bottle detection:
+This project provides a complete pipeline that combines YOLO object detection with batch OCR:
 
-- **YOLO**: Detects and locates wine bottles in images
-- **EasyOCR**: Extracts and reads text from wine labels
+**Quick Start:**
+```bash
+python src/test/yolo_ocr_pipeline.py --image wine_bottles.jpg
+```
 
-These can be combined for comprehensive wine bottle analysis:
-1. Use YOLO to detect bottle locations
-2. Crop detected regions
-3. Use EasyOCR to extract label text
+**How it works:**
+1. YOLO detects and locates wine bottles in the image
+2. Bounding boxes are sent to the batch OCR API in a single request
+3. Text is extracted from each bottle and associated with its detection
+
+**For detailed documentation, see:** [src/test/BATCH_OCR_USAGE.md](src/test/BATCH_OCR_USAGE.md)
+
+This approach is much more efficient than processing bottles individually:
+- Single API call for all bottles
+- Model stays loaded in memory
+- ~2.1 seconds for 3 bottles (~0.7s per bottle)
 
 ## License
 

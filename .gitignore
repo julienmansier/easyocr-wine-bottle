@@ -60,3 +60,6 @@ temp/
 # Environment variables
 .env
 .env.local
+
+## Python ENV
+ocr/*
